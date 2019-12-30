@@ -13,11 +13,11 @@
 later.parse.recur = function () {
 
   var schedules = [],
-      exceptions = [],
-      cur,
-      curArr = schedules,
-      curName,
-      values, every, modifier, applyMin, applyMax, i, last;
+    exceptions = [],
+    cur,
+    curArr = schedules,
+    curName,
+    values, every, modifier, applyMin, applyMax, i, last;
 
   /**
   * Adds values to the specified constraint in the current schedule.
@@ -47,7 +47,7 @@ later.parse.recur = function () {
       }
 
       // save off values in case of startingOn or between
-      last = {n: name, x: every, c: curName.length, m: max};
+      last = { n: name, x: every, c: curName.length, m: max };
     }
 
     values = applyMin ? [min] : applyMax ? [max] : values;
@@ -185,7 +185,7 @@ later.parse.recur = function () {
       //values = arguments;
       for (var i = 0, len = values.length; i < len; i++) {
         var split = values[i].split(':');
-        if(split.length < 3) split.push(0);
+        if (split.length < 3) split.push(0);
         values[i] = (+split[0]) * 3600 + (+split[1]) * 60 + (+split[2]);
       }
 
@@ -270,8 +270,8 @@ later.parse.recur = function () {
     *
     * @api public
     */
-    onWeekend: function() {
-      values = [1,7];
+    onWeekend: function () {
+      values = [1, 7];
       return this.dayOfWeek();
     },
 
@@ -280,8 +280,8 @@ later.parse.recur = function () {
     *
     * @api public
     */
-    onWeekday: function() {
-      values = [2,3,4,5,6];
+    onWeekday: function () {
+      values = [2, 3, 4, 5, 6];
       return this.dayOfWeek();
     },
 
@@ -320,6 +320,19 @@ later.parse.recur = function () {
     },
 
     /**
+    * Days period, denotes number of days with no constraint, week, month or whatever.
+    *
+    * recur().every(45).dayEx();
+    *
+    * @api public
+    */
+    dayEx: function () {
+      var extent = later.DX.extent(new Date());
+      add('DX', extent[0], extent[1]);
+      return this;
+    },
+
+    /**
     * Weeks of month time period, denotes number of weeks within a
     * month. The first week is the week that includes the 1st of the
     * month. Subsequent weeks start on Sunday.
@@ -354,6 +367,19 @@ later.parse.recur = function () {
     },
 
     /**
+    * Weeks period, denotes number of weeks with no constraint, month, year or whatever.
+    *
+    * recur().every(7).weekEx();
+    *
+    * @api public
+    */
+    weekEx: function () {
+      var extent = later.WX.extent(new Date());
+      add('WX', extent[0], extent[1]);
+      return this;
+    },
+
+    /**
     * Month time period, denotes the months within a year.
     * Minimum value is 1, maximum value is 12.  Specify 0 for last.
     * 1 - January
@@ -375,6 +401,19 @@ later.parse.recur = function () {
     */
     month: function () {
       add('M', 1, 12);
+      return this;
+    },
+
+    /**
+    * Month time period, no year constraint.
+    *
+    * recur(7).monthEx();
+    *
+    * @api public
+    */
+    monthEx: function () {
+      var extent = later.MX.extent(new Date());
+      add('MX', extent[0], extent[1]);
       return this;
     },
 
@@ -417,7 +456,7 @@ later.parse.recur = function () {
     */
     customModifier: function (id, vals) {
       var custom = later.modifier[id];
-      if(!custom) throw new Error('Custom modifier ' + id + ' not recognized!');
+      if (!custom) throw new Error('Custom modifier ' + id + ' not recognized!');
 
       modifier = id;
       values = arguments[1] instanceof Array ? arguments[1] : [arguments[1]];
@@ -433,10 +472,25 @@ later.parse.recur = function () {
     */
     customPeriod: function (id) {
       var custom = later[id];
-      if(!custom) throw new Error('Custom time period ' + id + ' not recognized!');
+      if (!custom) throw new Error('Custom time period ' + id + ' not recognized!');
 
       add(id, custom.extent(new Date())[0], custom.extent(new Date())[1]);
       return this;
+    },
+
+    /**
+    * Modifies a recurring interval (specified using every) to match
+    * starting date. 
+    *
+    * recur().every(5).day().reference('2019-05-03');
+    *
+    * @param {DateTime} referenceDate: The desired starting offset
+    * @api public
+    */
+    reference: function (referenceDate) {
+      referenceDate = new Date(referenceDate);
+      var start = later[last.n].val(referenceDate) % last.x;
+      return this.between(start, last.m);
     },
 
     /**

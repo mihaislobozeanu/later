@@ -147,6 +147,35 @@ later = function() {
       return later.date.prev(later.Y.val(month), later.M.val(month), val > DMax ? DMax : val || DMax);
     }
   };
+  later.dayEx = later.DX = {
+    rangeStart: new Date("2015-01-01"),
+    rangeEnd: new Date("2050-01-01"),
+    name: "dayEx",
+    range: 86400,
+    val: function(d) {
+      return d.DX || (d.DX = later.date.diffInDays(later.DX.rangeStart, d));
+    },
+    isValid: function(d, val) {
+      return later.DX.val(d) === (val || later.DX.extent(d)[1]);
+    },
+    extent: function(d) {
+      if (d.DXExtent) return d.DXExtent;
+      var end = Math.floor(later.DX.rangeEnd.getTime() / later.DAY) - Math.floor(later.DX.rangeStart.getTime() / later.DAY);
+      return d.DXExtent = [ 1, end ];
+    },
+    start: function(d) {
+      return d.DXStart || (d.DXStart = later.date.next(later.Y.val(d), later.M.val(d), later.D.val(d)));
+    },
+    end: function(d) {
+      return d.DXEnd || (d.DXEnd = later.date.prev(later.Y.val(d), later.M.val(d), later.D.val(d)));
+    },
+    next: function(d, val) {
+      return new Date(later.DX.rangeStart.getTime() + val * later.DAY);
+    },
+    prev: function(d, val) {
+      return new Date(later.DX.rangeStart.getTime() + val * later.DAY);
+    }
+  };
   later.dayOfWeekCount = later.dc = {
     name: "day of week count",
     range: 604800,
@@ -328,6 +357,36 @@ later = function() {
       return later.date.prev(later.Y.val(d) - (val >= later.M.val(d) ? 1 : 0), val);
     }
   };
+  later.monthEx = later.MX = {
+    name: "monthEx",
+    range: 2629740,
+    val: function(d) {
+      return d.MX || (d.MX = later.date.diffInMonths(later.wy.start(later.DX.rangeStart), later.wy.start(d)));
+    },
+    isValid: function(d, val) {
+      return later.MX.val(d) === (val || later.MX.extent(d)[1]);
+    },
+    extent: function(d) {
+      if (d.MXExtent) return d.MXExtent;
+      var end = later.date.diffInMonths(later.wy.start(later.DX.rangeStart), later.wy.start(later.DX.rangeEnd));
+      return d.MXExtent = [ 1, end ];
+    },
+    start: function(d) {
+      return d.MXStart || (d.MXStart = later.date.next(later.Y.val(d), later.M.val(d)));
+    },
+    end: function(d) {
+      return d.MXEnd || (d.MXEnd = later.date.prev(later.Y.val(d), later.M.val(d)));
+    },
+    next: function(d, val) {
+      var result = new Date(later.wy.start(later.DX.rangeStart));
+      result.setMonth(result.getMonth() + val);
+      return result;
+    },
+    prev: function(d, val) {
+      val = val > 12 ? 12 : val || 12;
+      return later.date.prev(later.Y.val(d) - (val >= later.M.val(d) ? 1 : 0), val);
+    }
+  };
   later.second = later.s = {
     name: "second",
     range: 1,
@@ -459,6 +518,34 @@ later = function() {
       var wyMax = later.wy.extent(year)[1], wyEnd = later.wy.end(year);
       val = val > wyMax ? wyMax : val || wyMax;
       return later.wy.end(later.date.next(later.Y.val(wyEnd), later.M.val(wyEnd), later.D.val(wyEnd) + 7 * (val - 1)));
+    }
+  };
+  later.weekEx = later.WX = {
+    name: "weekEx",
+    range: 604800,
+    val: function(d) {
+      if (d.WX) return d.WX;
+      return d.WX = Math.ceil(later.date.diffInDays(later.wy.start(later.DX.rangeStart), d) / 7);
+    },
+    isValid: function(d, val) {
+      return later.WX.val(d) === (val || later.WX.extent(d)[1]);
+    },
+    extent: function(d) {
+      if (d.WXExtent) return d.WXExtent;
+      var end = Math.floor(later.date.diffInDays(later.wy.start(later.DX.rangeStart), later.wy.start(later.DX.rangeEnd)) / 7);
+      return d.WXExtent = [ 1, end ];
+    },
+    start: function(d) {
+      return d.WXStart || (d.WXStart = later.date.next(later.Y.val(d), later.M.val(d), later.D.val(d) - (later.dw.val(d) > 1 ? later.dw.val(d) - 2 : 6)));
+    },
+    end: function(d) {
+      return d.WXEnd || (d.WXEnd = later.date.prev(later.Y.val(d), later.M.val(d), later.D.val(d) + (later.dw.val(d) > 1 ? 8 - later.dw.val(d) : 0)));
+    },
+    next: function(d, val) {
+      return new Date(later.wy.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+    },
+    prev: function(d, val) {
+      return new Date(later.wy.start(later.DX.rangeStart).getTime() + val * later.WEEK);
     }
   };
   later.year = later.Y = {
@@ -907,6 +994,13 @@ later = function() {
   later.date.prevRollover = function(d, val, constraint, period) {
     var cur = constraint.val(d);
     return val >= cur || !val ? period.start(period.prev(d, period.val(d) - 1)) : period.start(d);
+  };
+  later.date.diffInDays = function(start, end) {
+    return Math.floor((Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()) - Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())) / later.DAY);
+  };
+  later.date.diffInMonths = function(start, end) {
+    var months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    return months <= 0 ? 0 : months;
   };
   return later;
 }();
