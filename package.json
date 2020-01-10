@@ -32,5 +32,8 @@
   "license": "MIT",
   "scripts": {
     "test": "./node_modules/.bin/mocha test/**/*-test.js --reporter dot"
+  },
+  "publishConfig": {
+    "registry": "https://nexus.dudes.local/repository/npm-forks/"
   }
 }
