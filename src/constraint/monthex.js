@@ -27,7 +27,7 @@ later.monthEx = later.MX = {
   * @param {Date} d: The date to calculate the value of
   */
   val: function (d) {
-    return d.MX || (d.MX = later.date.diffInMonths(later.wy.start(later.DX.rangeStart), later.wy.start(d)));
+    return d.MX || (d.MX = later.date.diffInMonths(later.MX.start(later.DX.rangeStart), later.MX.start(d)));
   },
 
   /**
@@ -46,7 +46,7 @@ later.monthEx = later.MX = {
   extent: function (d) {
     if (d.MXExtent)
       return d.MXExtent;
-    var end = later.date.diffInMonths(later.wy.start(later.DX.rangeStart), later.wy.start(later.DX.rangeEnd));
+    var end = later.date.diffInMonths(later.MX.start(later.DX.rangeStart), later.MX.start(later.DX.rangeEnd));
     return (d.MXExtent = [1, end]);
   },
 
@@ -56,7 +56,7 @@ later.monthEx = later.MX = {
   * @param {Date} d: The specified date
   */
   start: function (d) {
-    return d.MXStart || (d.MXStart = later.date.next(later.Y.val(d), later.M.val(d)));
+    return d.MXStart || (d.MXStart = later.date.startOfMonth(d));
   },
 
   /**
@@ -65,7 +65,7 @@ later.monthEx = later.MX = {
   * @param {Date} d: The specified date
   */
   end: function (d) {
-    return d.MXEnd || (d.MXEnd = later.date.prev(later.Y.val(d), later.M.val(d)));
+    return d.MXEnd || (d.MXEnd = later.date.endOfMonth(d));
   },
 
   /**
@@ -75,7 +75,7 @@ later.monthEx = later.MX = {
   * @param {int} val: The desired value, must be within extent
   */
   next: function (d, val) {
-    var result = new Date(later.wy.start(later.DX.rangeStart));
+    var result = new Date(later.MX.start(later.DX.rangeStart));
     result.setMonth(result.getMonth() + val);
     return result;
   },
@@ -87,11 +87,10 @@ later.monthEx = later.MX = {
   * @param {int} val: The desired value, must be within extent
   */
   prev: function (d, val) {
-    val = val > 12 ? 12 : val || 12;
-
-    return later.date.prev(
-      later.Y.val(d) - (val >= later.M.val(d) ? 1 : 0),
-      val);
+    var result = new Date(later.MX.start(later.DX.rangeStart));
+    result.setMonth(result.getMonth() + val);
+    result.setTime(result.getTime() - later.SEC);
+    return result;
   }
 
 };

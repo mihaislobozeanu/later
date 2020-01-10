@@ -1,5 +1,7 @@
 import "day";
 import "dayex";
+import "weekday";
+import "weekendday";
 import "dayofweekcount";
 import "dayofweek";
 import "dayofyear";

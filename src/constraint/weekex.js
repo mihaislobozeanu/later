@@ -30,7 +30,7 @@ later.weekEx = later.WX = {
     if (d.WX)
       return d.WX;
 
-    return d.WX = Math.ceil(later.date.diffInDays(later.wy.start(later.DX.rangeStart), d) / 7);
+    return d.WX = Math.ceil(later.date.diffInDays(later.WX.start(later.DX.rangeStart), later.WX.start(d)) / 7);
   },
 
   /**
@@ -51,7 +51,7 @@ later.weekEx = later.WX = {
   extent: function (d) {
     if (d.WXExtent)
       return d.WXExtent;
-    var end = Math.floor(later.date.diffInDays(later.wy.start(later.DX.rangeStart), later.wy.start(later.DX.rangeEnd)) / 7);
+    var end = Math.floor(later.date.diffInDays(later.WX.start(later.DX.rangeStart), later.WX.start(later.DX.rangeEnd)) / 7);
     return (d.WXExtent = [1, end]);
   },
 
@@ -61,12 +61,7 @@ later.weekEx = later.WX = {
   * @param {Date} d: The specified date
   */
   start: function (d) {
-    return d.WXStart || (d.WXStart = later.date.next(
-      later.Y.val(d),
-      later.M.val(d),
-      // jump to the Monday of the current week
-      later.D.val(d) - (later.dw.val(d) > 1 ? later.dw.val(d) - 2 : 6)
-    ));
+    return d.WXStart || (d.WXStart = later.date.startOfWeek(d));
   },
 
   /**
@@ -75,12 +70,7 @@ later.weekEx = later.WX = {
   * @param {Date} d: The specified date
   */
   end: function (d) {
-    return d.WXEnd || (d.WXEnd = later.date.prev(
-      later.Y.val(d),
-      later.M.val(d),
-      // jump to the Saturday of the current week
-      later.D.val(d) + (later.dw.val(d) > 1 ? 8 - later.dw.val(d) : 0)
-    ));
+    return d.WXEnd || (d.WXEnd = later.date.endOfWeek(d));
   },
 
   /**
@@ -90,7 +80,7 @@ later.weekEx = later.WX = {
   * @param {int} val: The desired value, must be within extent
   */
   next: function (d, val) {
-    return new Date(later.wy.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+    return new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK);
   },
 
   /**
@@ -100,6 +90,8 @@ later.weekEx = later.WX = {
   * @param {int} val: The desired value, must be within extent
   */
   prev: function (d, val) {
-    return new Date(later.wy.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+    var result = new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+    result.setTime(result.getTime() - later.SEC);
+    return result;
   }
 };

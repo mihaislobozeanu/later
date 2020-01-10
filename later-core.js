@@ -176,6 +176,100 @@ later = function() {
       return new Date(later.DX.rangeStart.getTime() + val * later.DAY);
     }
   };
+  later.weekday = later.WD = {
+    name: "weekday",
+    range: 86400,
+    val: function(d) {
+      if (d.WD) return d.WD;
+      var weekdaysInMonth = later.WD.weekdaysInMonth(d), day = later.date.getDate.call(d);
+      return d.WD = weekdaysInMonth.map[day].value + 1;
+    },
+    weekdaysInMonth: function(d) {
+      return d.weekdaysInMonth || (d.weekdaysInMonth = later.date.weekdaysInMonth(d));
+    },
+    isValid: function(d, val) {
+      if (later.WD.val(d) === (val || later.WD.extent(d)[1])) {
+        var weekdaysInMonth = later.WD.weekdaysInMonth(d), day = later.date.getDate.call(d);
+        return weekdaysInMonth.map[day].valid;
+      }
+      return false;
+    },
+    extent: function(d) {
+      if (d.WDExtent) return d.WDExtent;
+      var weekdaysInMonth = later.WD.weekdaysInMonth(d);
+      return d.WDExtent = [ 1, weekdaysInMonth.values.length ];
+    },
+    start: function(d) {
+      return d.WDStart || (d.WDStart = later.date.next(later.Y.val(d), later.M.val(d), later.D.val(d)));
+    },
+    end: function(d) {
+      return d.WDEnd || (d.WDEnd = later.date.prev(later.Y.val(d), later.M.val(d), later.D.val(d)));
+    },
+    next: function(d, val) {
+      var DMax = later.WD.extent(d)[1];
+      val = val > DMax ? 1 : val;
+      var weekdaysInMonth = later.WD.weekdaysInMonth(d), day = weekdaysInMonth.values[(val || DMax) - 1], month = later.date.nextRollover(d, day, later.D, later.M);
+      DMax = later.WD.extent(month)[1];
+      val = val > DMax ? 1 : val || DMax;
+      weekdaysInMonth = later.WD.weekdaysInMonth(month);
+      day = weekdaysInMonth.values[val - 1];
+      return later.date.next(later.Y.val(month), later.M.val(month), day);
+    },
+    prev: function(d, val) {
+      var weekdaysInMonth = later.WD.weekdaysInMonth(d), day = weekdaysInMonth.values[(val || DMax) - 1], month = later.date.prevRollover(d, day, later.D, later.M), DMax = later.WD.extent(month)[1];
+      val = val > DMax ? DMax : val || DMax;
+      weekdaysInMonth = later.WD.weekdaysInMonth(month);
+      day = weekdaysInMonth.values[val - 1];
+      return later.date.prev(later.Y.val(month), later.M.val(month), day);
+    }
+  };
+  later.weekendDay = later.WED = {
+    name: "weekendDay",
+    range: 86400,
+    val: function(d) {
+      if (d.WED) return d.WED;
+      var weekendDaysInMonth = later.WED.weekendDaysInMonth(d), day = later.date.getDate.call(d);
+      return d.WED = weekendDaysInMonth.map[day].value + 1;
+    },
+    weekendDaysInMonth: function(d) {
+      return d.weekendDaysInMonth || (d.weekendDaysInMonth = later.date.weekendDaysInMonth(d));
+    },
+    isValid: function(d, val) {
+      if (later.WED.val(d) === (val || later.WED.extent(d)[1])) {
+        var weekendDaysInMonth = later.WED.weekendDaysInMonth(d), day = later.date.getDate.call(d);
+        return weekendDaysInMonth.map[day].valid;
+      }
+      return false;
+    },
+    extent: function(d) {
+      if (d.WDExtent) return d.WDExtent;
+      var weekendDaysInMonth = later.WED.weekendDaysInMonth(d);
+      return d.WDExtent = [ 1, weekendDaysInMonth.values.length ];
+    },
+    start: function(d) {
+      return d.WDStart || (d.WDStart = later.date.next(later.Y.val(d), later.M.val(d), later.D.val(d)));
+    },
+    end: function(d) {
+      return d.WDEnd || (d.WDEnd = later.date.prev(later.Y.val(d), later.M.val(d), later.D.val(d)));
+    },
+    next: function(d, val) {
+      var DMax = later.WED.extent(d)[1];
+      val = val > DMax ? 1 : val;
+      var weekendDaysInMonth = later.WED.weekendDaysInMonth(d), day = weekendDaysInMonth.values[(val || DMax) - 1], month = later.date.nextRollover(d, day, later.D, later.M);
+      DMax = later.WED.extent(month)[1];
+      val = val > DMax ? 1 : val || DMax;
+      weekendDaysInMonth = later.WED.weekendDaysInMonth(month);
+      day = weekendDaysInMonth.values[val - 1];
+      return later.date.next(later.Y.val(month), later.M.val(month), day);
+    },
+    prev: function(d, val) {
+      var weekendDaysInMonth = later.WD.weekendDaysInMonth(d), day = weekendDaysInMonth.values[(val || DMax) - 1], month = later.date.prevRollover(d, day, later.D, later.M), DMax = later.WD.extent(month)[1];
+      val = val > DMax ? DMax : val || DMax;
+      weekendDaysInMonth = later.WD.weekendDaysInMonth(month);
+      day = weekendDaysInMonth.values[val - 1];
+      return later.date.prev(later.Y.val(month), later.M.val(month), day);
+    }
+  };
   later.dayOfWeekCount = later.dc = {
     name: "day of week count",
     range: 604800,
@@ -361,30 +455,32 @@ later = function() {
     name: "monthEx",
     range: 2629740,
     val: function(d) {
-      return d.MX || (d.MX = later.date.diffInMonths(later.wy.start(later.DX.rangeStart), later.wy.start(d)));
+      return d.MX || (d.MX = later.date.diffInMonths(later.MX.start(later.DX.rangeStart), later.MX.start(d)));
     },
     isValid: function(d, val) {
       return later.MX.val(d) === (val || later.MX.extent(d)[1]);
     },
     extent: function(d) {
       if (d.MXExtent) return d.MXExtent;
-      var end = later.date.diffInMonths(later.wy.start(later.DX.rangeStart), later.wy.start(later.DX.rangeEnd));
+      var end = later.date.diffInMonths(later.MX.start(later.DX.rangeStart), later.MX.start(later.DX.rangeEnd));
       return d.MXExtent = [ 1, end ];
     },
     start: function(d) {
-      return d.MXStart || (d.MXStart = later.date.next(later.Y.val(d), later.M.val(d)));
+      return d.MXStart || (d.MXStart = later.date.startOfMonth(d));
     },
     end: function(d) {
-      return d.MXEnd || (d.MXEnd = later.date.prev(later.Y.val(d), later.M.val(d)));
+      return d.MXEnd || (d.MXEnd = later.date.endOfMonth(d));
     },
     next: function(d, val) {
-      var result = new Date(later.wy.start(later.DX.rangeStart));
+      var result = new Date(later.MX.start(later.DX.rangeStart));
       result.setMonth(result.getMonth() + val);
       return result;
     },
     prev: function(d, val) {
-      val = val > 12 ? 12 : val || 12;
-      return later.date.prev(later.Y.val(d) - (val >= later.M.val(d) ? 1 : 0), val);
+      var result = new Date(later.MX.start(later.DX.rangeStart));
+      result.setMonth(result.getMonth() + val);
+      result.setTime(result.getTime() - later.SEC);
+      return result;
     }
   };
   later.second = later.s = {
@@ -525,27 +621,29 @@ later = function() {
     range: 604800,
     val: function(d) {
       if (d.WX) return d.WX;
-      return d.WX = Math.ceil(later.date.diffInDays(later.wy.start(later.DX.rangeStart), d) / 7);
+      return d.WX = Math.ceil(later.date.diffInDays(later.WX.start(later.DX.rangeStart), later.WX.start(d)) / 7);
     },
     isValid: function(d, val) {
       return later.WX.val(d) === (val || later.WX.extent(d)[1]);
     },
     extent: function(d) {
       if (d.WXExtent) return d.WXExtent;
-      var end = Math.floor(later.date.diffInDays(later.wy.start(later.DX.rangeStart), later.wy.start(later.DX.rangeEnd)) / 7);
+      var end = Math.floor(later.date.diffInDays(later.WX.start(later.DX.rangeStart), later.WX.start(later.DX.rangeEnd)) / 7);
       return d.WXExtent = [ 1, end ];
     },
     start: function(d) {
-      return d.WXStart || (d.WXStart = later.date.next(later.Y.val(d), later.M.val(d), later.D.val(d) - (later.dw.val(d) > 1 ? later.dw.val(d) - 2 : 6)));
+      return d.WXStart || (d.WXStart = later.date.startOfWeek(d));
     },
     end: function(d) {
-      return d.WXEnd || (d.WXEnd = later.date.prev(later.Y.val(d), later.M.val(d), later.D.val(d) + (later.dw.val(d) > 1 ? 8 - later.dw.val(d) : 0)));
+      return d.WXEnd || (d.WXEnd = later.date.endOfWeek(d));
     },
     next: function(d, val) {
-      return new Date(later.wy.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+      return new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK);
     },
     prev: function(d, val) {
-      return new Date(later.wy.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+      var result = new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+      result.setTime(result.getTime() - later.SEC);
+      return result;
     }
   };
   later.year = later.Y = {
@@ -998,9 +1096,77 @@ later = function() {
   later.date.diffInDays = function(start, end) {
     return Math.floor((Date.UTC(end.getFullYear(), end.getMonth(), end.getDate()) - Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())) / later.DAY);
   };
+  later.date.startOfWeek = function(value) {
+    var date = new Date(value.getFullYear(), value.getMonth(), value.getDate()), day = date.getDay(), diff = date.getTime() - day * later.DAY;
+    date.setTime(diff);
+    return date;
+  };
+  later.date.endOfWeek = function(value) {
+    var date = later.date.startOfWeek(value);
+    date.setTime(date.getTime() + later.WEEK - later.SEC);
+    return date;
+  };
   later.date.diffInMonths = function(start, end) {
     var months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
     return months <= 0 ? 0 : months;
+  };
+  later.date.startOfMonth = function(value) {
+    return new Date(value.getFullYear(), value.getMonth(), 1);
+  };
+  later.date.endOfMonth = function(value) {
+    var result = new Date(value.getFullYear(), value.getMonth() + 1, 1);
+    result.setTime(result.getTime() - later.SEC);
+    return result;
+  };
+  var daysInMonthCache = {
+    weekDays: {},
+    weekendDays: {}
+  };
+  function initDaysInMonth(year, month) {
+    var daysInMonth = new Date(year, month + 1, 0).getDate(), dayOfWeekOffset = new Date(year, month, 1).getDay() - 1, result = {
+      weekDays: {
+        values: [],
+        map: {}
+      },
+      weekendDays: {
+        values: [],
+        map: {}
+      }
+    };
+    var weekendDayIdx = -1, weekdayIdx = -1;
+    for (var day = 1; day <= daysInMonth; day++) {
+      var dayOfWeek = (day + dayOfWeekOffset) % 7;
+      if (dayOfWeek == 0 || dayOfWeek == 6) {
+        result.weekendDays.map[day] = {
+          value: weekendDayIdx = result.weekendDays.values.push(day) - 1,
+          valid: true
+        };
+        result.weekDays.map[day] = {
+          value: weekdayIdx + 1,
+          valid: false
+        };
+      } else {
+        result.weekDays.map[day] = {
+          value: weekdayIdx = result.weekDays.values.push(day) - 1,
+          valid: true
+        };
+        result.weekendDays.map[day] = {
+          value: weekendDayIdx + 1,
+          valid: false
+        };
+      }
+    }
+    return result;
+  }
+  later.date.weekdaysInMonth = function(value) {
+    var year = value.getFullYear(), month = value.getMonth(), yearMonth = year * 100 + month;
+    var daysInMonth = daysInMonthCache[yearMonth] = daysInMonthCache[yearMonth] || initDaysInMonth(year, month);
+    return daysInMonth.weekDays;
+  };
+  later.date.weekendDaysInMonth = function(value) {
+    var year = value.getFullYear(), month = value.getMonth(), yearMonth = year * 100 + month;
+    var daysInMonth = daysInMonthCache[yearMonth] = daysInMonthCache[yearMonth] || initDaysInMonth(year, month, yearMonth);
+    return daysInMonth.weekendDays;
   };
   return later;
 }();

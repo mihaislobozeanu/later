@@ -245,6 +245,17 @@ later.parse.recur = function () {
       return this;
     },
 
+    weekdayOfMonth: function () {
+      add('WD', 1, applyMax ? 0 : 23);
+      return this;
+    },
+
+    weekendDayOfMonth: function () {
+      add('WED', 1, applyMax ? 0 : 23);
+      return this;
+    },
+
+
     /**
     * Days of week time period, denotes the days within a week.
     * Minimum value is 1, maximum value is 7.  Specify 0 for last.
