@@ -80,7 +80,7 @@ later.weekEx = later.WX = {
   * @param {int} val: The desired value, must be within extent
   */
   next: function (d, val) {
-    return new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+    return later.date.timeless(new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK));
   },
 
   /**
@@ -90,7 +90,7 @@ later.weekEx = later.WX = {
   * @param {int} val: The desired value, must be within extent
   */
   prev: function (d, val) {
-    var result = new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+    var result = later.date.timeless(new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK));
     result.setTime(result.getTime() - later.SEC);
     return result;
   }

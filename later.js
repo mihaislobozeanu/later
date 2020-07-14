@@ -1,7 +1,7 @@
 later = function() {
   "use strict";
   var later = {
-    version: "1.2.0"
+    version: "2.0.1"
   };
   if (!Array.prototype.indexOf) {
     Array.prototype.indexOf = function(searchElement) {
@@ -148,8 +148,8 @@ later = function() {
     }
   };
   later.dayEx = later.DX = {
-    rangeStart: new Date("2015-01-01"),
-    rangeEnd: new Date("2050-01-01"),
+    rangeStart: new Date(2015, 0, 1),
+    rangeEnd: new Date(2050, 0, 1),
     name: "dayEx",
     range: 86400,
     val: function(d) {
@@ -638,10 +638,10 @@ later = function() {
       return d.WXEnd || (d.WXEnd = later.date.endOfWeek(d));
     },
     next: function(d, val) {
-      return new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+      return later.date.timeless(new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK));
     },
     prev: function(d, val) {
-      var result = new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK);
+      var result = later.date.timeless(new Date(later.WX.start(later.DX.rangeStart).getTime() + val * later.WEEK));
       result.setTime(result.getTime() - later.SEC);
       return result;
     }
@@ -1167,6 +1167,11 @@ later = function() {
     var year = value.getFullYear(), month = value.getMonth(), yearMonth = year * 100 + month;
     var daysInMonth = daysInMonthCache[yearMonth] = daysInMonthCache[yearMonth] || initDaysInMonth(year, month, yearMonth);
     return daysInMonth.weekendDays;
+  };
+  later.date.timeless = function(value) {
+    var date = new Date(value);
+    date.setHours(0, 0, 0, 0);
+    return date;
   };
   later.parse = {};
   later.parse.cron = function(expr, hasSeconds) {

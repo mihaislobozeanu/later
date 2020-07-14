@@ -10,8 +10,8 @@
 */
 later.dayEx = later.DX = {
 
-  rangeStart: new Date('2015-01-01'),
-  rangeEnd: new Date('2050-01-01'),
+  rangeStart: new Date(2015, 0, 1),
+  rangeEnd: new Date(2050, 0, 1),
 
 
   /**

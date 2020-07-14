@@ -79,3 +79,10 @@ later.date.weekendDaysInMonth = function (value) {
 	var daysInMonth = daysInMonthCache[yearMonth] = daysInMonthCache[yearMonth] || initDaysInMonth(year, month, yearMonth);
 	return daysInMonth.weekendDays;
 }
+
+
+later.date.timeless = function (value) {
+	var date = new Date(value);
+	date.setHours(0, 0, 0, 0);
+	return date;
+}

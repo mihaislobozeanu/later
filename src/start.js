@@ -5,7 +5,7 @@
 * For all details and documentation:
 *     http://bunkat.github.com/later
 */
-later = (function() {
+later = (function () {
   'use strict';
 
-  var later = {version: "1.2.0"}; // semver
+  var later = { version: "2.0.1" }; // semver
