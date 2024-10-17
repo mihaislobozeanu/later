@@ -1,10 +1,10 @@
-var later = require('../../index'),
+const later = require('../../index'),
     should = require('should');
 
 describe('Compile', function() {
 
   describe('start', function() {
-    var d = new Date('2013-03-21T00:00:05Z');
+    const d = new Date('2013-03-21T00:00:05Z');
 
     describe('next', function() {
 
@@ -46,7 +46,7 @@ describe('Compile', function() {
   });
 
   describe('end', function() {
-    var d = new Date('2013-03-21T00:00:05Z');
+    const d = new Date('2013-03-21T00:00:05Z');
 
     it('should return next invalid occurrence if valid', function() {
       later.date.UTC();
@@ -61,7 +61,7 @@ describe('Compile', function() {
   });
 
   describe('tick', function() {
-    var d = new Date('2013-03-21T00:00:05Z');
+    const d = new Date('2013-03-21T00:00:05Z');
 
     describe('next', function() {
 

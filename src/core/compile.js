@@ -11,12 +11,12 @@
 */
 later.compile = function(schedDef) {
 
-  var constraints = [],
-      constraintsLen = 0,
-      tickConstraint;
+  const constraints = [];
+  let constraintsLen = 0,
+    tickConstraint;
 
-  for(var key in schedDef) {
-    var nameParts = key.split('_'),
+  for(const key in schedDef) {
+    const nameParts = key.split('_'),
         name = nameParts[0],
         mod = nameParts[1],
         vals = schedDef[key],
@@ -30,7 +30,7 @@ later.compile = function(schedDef) {
   // always skip the largest block of time possible to find the next valid
   // value)
   constraints.sort(function(a,b) {
-    var ra = a.constraint.range, rb = b.constraint.range;
+    const ra = a.constraint.range, rb = b.constraint.range;
     return (rb < ra) ? -1 : (rb > ra) ? 1 : 0;
   });
 
@@ -61,19 +61,19 @@ later.compile = function(schedDef) {
     * @param {Date} startDate: The first possible valid occurrence
     */
     start: function(dir, startDate) {
-      var next = startDate,
-          nextVal = later.array[dir],
-          maxAttempts = 1000,
-          done;
+      let next = startDate;
+      const nextVal = later.array[dir];
+      let maxAttempts = 1000,
+        done; 
 
       while(maxAttempts-- && !done && next) {
         done = true;
 
         // verify all of the constraints in order since we want to make the
         // largest jumps possible to find the first valid value
-        for(var i = 0; i < constraintsLen; i++) {
+        for(let i = 0; i < constraintsLen; i++) {
 
-          var constraint = constraints[i].constraint,
+          const constraint = constraints[i].constraint,
               curVal = constraint.val(next),
               extent = constraint.extent(next),
               newVal = nextVal(curVal, constraints[i].vals, extent);
@@ -103,16 +103,16 @@ later.compile = function(schedDef) {
     */
     end: function(dir, startDate) {
 
-      var result,
-          nextVal = later.array[dir + 'Invalid'],
-          compare = compareFn(dir);
+      let result;
+      const nextVal = later.array[dir + 'Invalid'],
+        compare = compareFn(dir);
 
-      for(var i = constraintsLen-1; i >= 0; i--) {
-        var constraint = constraints[i].constraint,
-            curVal = constraint.val(startDate),
-            extent = constraint.extent(startDate),
-            newVal = nextVal(curVal, constraints[i].vals, extent),
-            next;
+      for(let i = constraintsLen-1; i >= 0; i--) {
+        const constraint = constraints[i].constraint,
+          curVal = constraint.val(startDate),
+          extent = constraint.extent(startDate),
+          newVal = nextVal(curVal, constraints[i].vals, extent);
+        let next;
 
         if(newVal !== undefined) { // constraint has invalid value, use that
           next = constraint[dir](startDate, newVal);

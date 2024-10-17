@@ -12,11 +12,12 @@
 
 later.array.prev = function (val, values, extent) {
 
-  var cur, len = values.length,
-      zeroIsLargest = extent[0] !== 0,
-      prevIdx = len-1;
+  let cur;
+  const len = values.length,
+    zeroIsLargest = extent[0] !== 0;
+  let prevIdx = len-1;
 
-  for(var i = 0; i < len; i++) {
+  for(let i = 0; i < len; i++) {
     cur = values[i];
 
     if(cur === val) {

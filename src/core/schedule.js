@@ -14,16 +14,16 @@ later.schedule = function(sched) {
   if(!sched.schedules) throw new Error('Definition must include at least one schedule.');
 
   // compile the schedule components
-  var schedules = [],
+  const schedules = [],
       schedulesLen = sched.schedules.length,
       exceptions = [],
       exceptionsLen = sched.exceptions ? sched.exceptions.length : 0;
 
-  for(var i = 0; i < schedulesLen; i++) {
+  for(let i = 0; i < schedulesLen; i++) {
     schedules.push(later.compile(sched.schedules[i]));
   }
 
-  for(var j = 0; j < exceptionsLen; j++) {
+  for(let j = 0; j < exceptionsLen; j++) {
     exceptions.push(later.compile(sched.exceptions[j]));
   }
 
@@ -38,15 +38,15 @@ later.schedule = function(sched) {
   * @param {Bool} isRange: True to return ranges, false to return instances
   */
   function getInstances(dir, count, startDate, endDate, isRange) {
-    var compare = compareFn(dir), // encapsulates difference between directions
-        loopCount = count,
-        maxAttempts = 1000,
+    const compare = compareFn(dir), // encapsulates difference between directions
         schedStarts = [], exceptStarts = [],
-        next, end, results = [],
+        results = [],
         isForward = dir === 'next',
-        lastResult,
         rStart = isForward ? 0 : 1,
         rEnd = isForward ? 1 : 0;
+    let next, end, lastResult,
+      maxAttempts = 1000,
+      loopCount = count;
 
     startDate = startDate ? new Date(startDate) : new Date();
     if(!startDate || !startDate.getTime()) throw new Error('Invalid start date.');
@@ -74,9 +74,9 @@ later.schedule = function(sched) {
 
       // Step 5: Date is good, if range, find the end of the range and update start dates
       if(isRange) {
-        var maxEndDate = calcMaxEndDate(exceptStarts, compare);
+        const maxEndDate = calcMaxEndDate(exceptStarts, compare);
         end = calcEnd(dir, schedules, schedStarts, next, maxEndDate);
-        var r = isForward ?
+        const r = isForward ?
           [
             new Date(Math.max(startDate, next)),
             end ? new Date(endDate ? Math.min(end, endDate) : end) : undefined
@@ -115,8 +115,8 @@ later.schedule = function(sched) {
 
     // clean the dates that will be returned to remove any cached properties
     // that were added during the schedule process
-    for (var i = 0, len = results.length; i < len; i++) {
-      var result = results[i];
+    for (let i = 0, len = results.length; i < len; i++) {
+      const result = results[i];
       results[i] = Object.prototype.toString.call(result) === '[object Array]' ?
         [ cleanDate(result[0]), cleanDate(result[1]) ] :
         cleanDate(result);
@@ -142,7 +142,7 @@ later.schedule = function(sched) {
   * @param {Date} startDate: Starts earlier than this date will be calculated
   */
   function setNextStarts(dir, schedArr, startsArr, startDate) {
-    for(var i = 0, len = schedArr.length; i < len; i++) {
+    for(let i = 0, len = schedArr.length; i < len; i++) {
       startsArr[i] = schedArr[i].start(dir, startDate);
     }
   }
@@ -158,9 +158,9 @@ later.schedule = function(sched) {
   * @param {Date} startDate: Starts earlier than this date will be calculated
   */
   function updateNextStarts(dir, schedArr, startsArr, startDate) {
-    var compare = compareFn(dir);
+    const compare = compareFn(dir);
 
-    for(var i = 0, len = schedArr.length; i < len; i++) {
+    for(let i = 0, len = schedArr.length; i < len; i++) {
       if(startsArr[i] && !compare(startsArr[i], startDate)) {
         startsArr[i] = schedArr[i].start(dir, startDate);
       }
@@ -178,10 +178,10 @@ later.schedule = function(sched) {
   * @param {Date} startDate: Starts earlier than this date will be calculated
   */
   function setRangeStarts(dir, schedArr, rangesArr, startDate) {
-    var compare = compareFn(dir);
+    const compare = compareFn(dir);
 
-    for(var i = 0, len = schedArr.length; i < len; i++) {
-      var nextStart = schedArr[i].start(dir, startDate);
+    for(let i = 0, len = schedArr.length; i < len; i++) {
+      const nextStart = schedArr[i].start(dir, startDate);
 
       if(!nextStart) {
         rangesArr[i] = later.NEVER;
@@ -203,11 +203,11 @@ later.schedule = function(sched) {
   * @param {Date} startDate: Starts earlier than this date will be calculated
   */
   function updateRangeStarts(dir, schedArr, rangesArr, startDate) {
-    var compare = compareFn(dir);
+    const compare = compareFn(dir);
 
-    for(var i = 0, len = schedArr.length; i < len; i++) {
+    for(let i = 0, len = schedArr.length; i < len; i++) {
       if(rangesArr[i] && !compare(rangesArr[i][0], startDate)) {
-        var nextStart = schedArr[i].start(dir, startDate);
+        const nextStart = schedArr[i].start(dir, startDate);
 
         if(!nextStart) {
           rangesArr[i] = later.NEVER;
@@ -229,7 +229,7 @@ later.schedule = function(sched) {
   * @param {Date} startDate: The date that should cause a schedule to tick
   */
   function tickStarts(dir, schedArr, startsArr, startDate) {
-    for(var i = 0, len = schedArr.length; i < len; i++) {
+    for(let i = 0, len = schedArr.length; i < len; i++) {
       if(startsArr[i] && startsArr[i].getTime() === startDate.getTime()) {
         startsArr[i] = schedArr[i].start(dir, schedArr[i].tick(dir, startDate));
       }
@@ -245,11 +245,11 @@ later.schedule = function(sched) {
   * @param {Date} minEndDate: The minimum end date to return
   */
   function getStart(schedArr, startsArr, startDate, minEndDate) {
-    var result;
+    let result;
 
-    for(var i = 0, len = startsArr.length; i < len; i++) {
+    for(let i = 0, len = startsArr.length; i < len; i++) {
       if(startsArr[i] && startsArr[i].getTime() === startDate.getTime()) {
-        var start = schedArr[i].tickStart(startDate);
+        const start = schedArr[i].tickStart(startDate);
 
         if(minEndDate && (start < minEndDate)) {
           return minEndDate;
@@ -274,10 +274,11 @@ later.schedule = function(sched) {
   * @param {Date} startDate: The valid date for which the overlap will be found
   */
   function calcRangeOverlap(dir, rangesArr, startDate) {
-    var compare = compareFn(dir), result;
+    const compare = compareFn(dir);
+    let result;
 
-    for(var i = 0, len = rangesArr.length; i < len; i++) {
-      var range = rangesArr[i];
+    for(let i = 0, len = rangesArr.length; i < len; i++) {
+      const range = rangesArr[i];
 
       if(range && !compare(range[0], startDate) &&
         (!range[1] || compare(range[1], startDate))) {
@@ -299,9 +300,9 @@ later.schedule = function(sched) {
   * @param {Array} compare: The compare function to use to determine earliest
   */
   function calcMaxEndDate(exceptsArr, compare) {
-    var result;
+    let result;
 
-    for(var i = 0, len = exceptsArr.length; i < len; i++) {
+    for(let i = 0, len = exceptsArr.length; i < len; i++) {
       if(exceptsArr[i] && (!result || compare(result, exceptsArr[i][0]))) {
         result = exceptsArr[i][0];
       }
@@ -322,13 +323,14 @@ later.schedule = function(sched) {
   * @param {Date} maxEndDate: The latested possible end date or null for none
   */
   function calcEnd(dir, schedArr, startsArr, startDate, maxEndDate) {
-    var compare = compareFn(dir), result;
+    const compare = compareFn(dir);
+    let result;
 
-    for(var i = 0, len = schedArr.length; i < len; i++) {
-      var start = startsArr[i];
+    for(let i = 0, len = schedArr.length; i < len; i++) {
+      const start = startsArr[i];
 
       if(start && start.getTime() === startDate.getTime()) {
-        var end = schedArr[i].end(dir, start);
+        const end = schedArr[i].end(dir, start);
 
         // if the end date is past the maxEndDate, just return the maxEndDate
         if(maxEndDate && (!end || compare(end, maxEndDate))) {
@@ -366,9 +368,9 @@ later.schedule = function(sched) {
   * @param {Function} compare: The comparison function to use
   */
   function findNext(arr, compare) {
-    var next = arr[0];
+    let next = arr[0];
 
-    for(var i = 1, len = arr.length; i < len; i++) {
+    for(let i = 1, len = arr.length; i < len; i++) {
       if(arr[i] && compare(next, arr[i])) {
         next = arr[i];
       }

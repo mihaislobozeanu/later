@@ -72,9 +72,9 @@ later.second = later.s = {
   * @param {int} val: The desired value, must be within extent
   */
   next: function(d, val) {
-    var s = later.s.val(d),
-        inc = val > 59 ? 60-s : (val <= s ? (60-s) + val : val-s),
-        next = new Date(d.getTime() + (inc * later.SEC));
+    const s = later.s.val(d),
+      inc = val > 59 ? 60 - s : (val <= s ? (60 - s) + val : val - s);
+    let next = new Date(d.getTime() + (inc * later.SEC));
 
     // correct for passing over a daylight savings boundry
     if(!later.date.isUTC && next.getTime() <= d.getTime()) {

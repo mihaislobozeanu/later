@@ -1,4 +1,4 @@
-var later = require("../index");
+const later = require("../index");
 
 console.log(JSON.stringify({
   "name": "later",

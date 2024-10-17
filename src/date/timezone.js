@@ -18,7 +18,7 @@ later.date.timezone = function(useLocalTime) {
     function(Y, M, D, h, m, s) { return new Date(Date.UTC(Y, M, D, h, m, s)); };
 
   // configure the accessor methods
-  var get = useLocalTime ? 'get' : 'getUTC',
+  const get = useLocalTime ? 'get' : 'getUTC',
       d = Date.prototype;
 
   later.date.getYear = d[get + 'FullYear'];

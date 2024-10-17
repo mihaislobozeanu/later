@@ -15,7 +15,7 @@ later.setInterval = function(fn, sched) {
     return;
   }
 
-  var t = later.setTimeout(scheduleTimeout, sched),
+  let t = later.setTimeout(scheduleTimeout, sched),
       done = t.isDone();
 
   /**

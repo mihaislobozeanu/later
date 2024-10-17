@@ -12,7 +12,7 @@
 */
 
 later.date.nextRollover = function(d, val, constraint, period) {
-  var cur = constraint.val(d),
+  const cur = constraint.val(d),
       max = constraint.extent(d)[1];
 
   return (((val || max) <= cur) || val > max) ?

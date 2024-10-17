@@ -31,7 +31,7 @@ later.weekOfYear = later.wy = {
     if (d.wy) return d.wy;
 
     // move to the Thursday in the target week and find Thurs of target year
-    var wThur = later.dw.next(later.wy.start(d), 5),
+    const wThur = later.dw.next(later.wy.start(d), 5),
         YThur = later.dw.next(later.Y.prev(wThur, later.Y.val(wThur)-1), 5);
 
     // caculate the difference between the two dates in weeks
@@ -57,7 +57,7 @@ later.weekOfYear = later.wy = {
     if (d.wyExtent) return d.wyExtent;
 
     // go to start of ISO week to get to the right year
-    var year = later.dw.next(later.wy.start(d), 5),
+    const year = later.dw.next(later.wy.start(d), 5),
         dwFirst = later.dw.val(later.Y.start(year)),
         dwLast = later.dw.val(later.Y.end(year));
 
@@ -101,15 +101,15 @@ later.weekOfYear = later.wy = {
   next: function(d, val) {
     val = val > later.wy.extent(d)[1] ? 1 : val;
 
-    var wyThur = later.dw.next(later.wy.start(d), 5),
-        year = later.date.nextRollover(wyThur, val, later.wy, later.Y);
+    const wyThur = later.dw.next(later.wy.start(d), 5);
+    let year = later.date.nextRollover(wyThur, val, later.wy, later.Y);
 
     // handle case where 1st of year is last week of previous month
     if(later.wy.val(year) !== 1) {
       year = later.dw.next(year, 2);
     }
 
-    var wyMax = later.wy.extent(year)[1],
+    const wyMax = later.wy.extent(year)[1],
         wyStart = later.wy.start(year);
 
     val = val > wyMax ? 1 : val || wyMax;
@@ -128,15 +128,15 @@ later.weekOfYear = later.wy = {
   * @param {int} val: The desired value, must be within extent
   */
   prev: function(d, val) {
-    var wyThur = later.dw.next(later.wy.start(d), 5),
-        year = later.date.prevRollover(wyThur, val, later.wy, later.Y);
+    const wyThur = later.dw.next(later.wy.start(d), 5);
+    let year = later.date.prevRollover(wyThur, val, later.wy, later.Y);
 
     // handle case where 1st of year is last week of previous month
     if(later.wy.val(year) !== 1) {
       year = later.dw.next(year, 2);
     }
 
-    var wyMax = later.wy.extent(year)[1],
+    const wyMax = later.wy.extent(year)[1],
         wyEnd = later.wy.end(year);
 
     val = val > wyMax ? wyMax : val || wyMax;

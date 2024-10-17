@@ -1,4 +1,4 @@
-var should = require('should');
+const should = require('should');
 
 module.exports = runner = function (later, constraint) {
 
@@ -8,14 +8,14 @@ module.exports = runner = function (later, constraint) {
   }
 
   function runSingleTest(fn, data, utc) {
-    var date = utc ? convertToUTC(data.date) : data.date,
-        dateString = utc ? date.toUTCString() : date,
-        ex = utc && (data[fn] instanceof Date) ? convertToUTC(data[fn]) : data[fn],
-        exString = utc && (ex instanceof Date) ? ex.toUTCString() : ex;
+    const date = utc ? convertToUTC(data.date) : data.date,
+      dateString = utc ? date.toUTCString() : date;
+    let ex = utc && (data[fn] instanceof Date) ? convertToUTC(data[fn]) : data[fn],
+      exString = utc && (ex instanceof Date) ? ex.toUTCString() : ex;
 
     it('should return ' + exString + ' for ' + dateString, function() {
       if(utc) later.date.UTC(); else later.date.localTime();
-      var actual = constraint[fn](date);
+      let actual = constraint[fn](date);
       actual = actual instanceof Date ? actual.getTime() : actual;
       ex = ex instanceof Date ? ex.getTime() : ex;
       actual.should.eql(ex);
@@ -23,11 +23,11 @@ module.exports = runner = function (later, constraint) {
   }
 
   function runSweepTest(fn, data, utc) {
-    var min = data.extent[0] === 1 ? 0 : data.extent[0],
+    const min = data.extent[0] === 1 ? 0 : data.extent[0],
         max = data.extent[1] + 1,
         inc = Math.ceil((max-min)/200); // max 200 tests per constraint
 
-    for(var i = min; i <= max; i = i + inc) { // test for overbounds
+    for(let i = min; i <= max; i = i + inc) { // test for overbounds
       if(fn === 'next') {
         testNext(data, i, utc); // test all values for amt
       }
@@ -38,15 +38,15 @@ module.exports = runner = function (later, constraint) {
   }
 
   function testNext(data, amt, utc) {
-    var date = utc ? convertToUTC(data.date) : data.date,
+    const date = utc ? convertToUTC(data.date) : data.date,
         dateString = utc ? date.toUTCString() : date;
 
     it('should return first date after ' + dateString + ' with val ' + amt, function() {
       if(utc) later.date.UTC(); else later.date.localTime();
 
-      var next = constraint.next(date, amt),
-          ex = amt,
-          outOfBounds = ex > constraint.extent(date)[1] || ex > constraint.extent(next)[1];
+      const next = constraint.next(date, amt);
+      let ex = amt;
+      const outOfBounds = ex > constraint.extent(date)[1] || ex > constraint.extent(next)[1];
 
       // if amt is outside of extent, the constraint should rollover to the
       // first value of the following time period
@@ -78,15 +78,15 @@ module.exports = runner = function (later, constraint) {
   }
 
   function testPrev(data, amt, utc) {
-    var date = utc ? convertToUTC(data.date) : data.date,
+    const date = utc ? convertToUTC(data.date) : data.date,
         dateString = utc ? date.toUTCString() : date;
 
     it('should return first date before ' + dateString + ' with val ' + amt, function() {
       if(utc) later.date.UTC(); else later.date.localTime();
 
-      var prev = constraint.prev(date, amt),
-          ex = amt,
-          outOfBounds = ex > constraint.extent(prev)[1];
+      const prev = constraint.prev(date, amt);
+      let ex = amt;
+      const outOfBounds = ex > constraint.extent(prev)[1];
 
       // if amt is outside of extent, the constraint should rollover to the
       // first value of the following time period
@@ -109,7 +109,7 @@ module.exports = runner = function (later, constraint) {
   return {
 
     run: function (data, isYear) {
-      var i = 0, len = data.length;
+      let i = 0, len = data.length;
 
       // test both UTC and local times for all functions
       [true, false].forEach(function (utc) {

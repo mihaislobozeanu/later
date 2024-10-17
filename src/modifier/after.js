@@ -18,7 +18,7 @@
 */
 later.modifier.after = later.modifier.a = function(constraint, values) {
 
-  var value = values[0];
+  const value = values[0];
 
   return {
 

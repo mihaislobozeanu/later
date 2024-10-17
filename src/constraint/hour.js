@@ -76,7 +76,7 @@ later.hour = later.h = {
   next: function(d, val) {
     val = val > 23 ? 0 : val;
 
-    var next = later.date.next(
+    let next = later.date.next(
       later.Y.val(d),
       later.M.val(d),
       later.D.val(d) + (val <= later.h.val(d) ? 1 : 0),

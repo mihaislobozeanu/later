@@ -12,11 +12,11 @@
 
 later.array.nextInvalid = function (val, values, extent) {
 
-  var min = extent[0], max = extent[1], len = values.length,
-      zeroVal = values[len-1] === 0 && min !== 0 ? max : 0,
-      next = val,
-      i = values.indexOf(val),
-      start = next;
+  const min = extent[0], max = extent[1], len = values.length,
+		zeroVal = values[len - 1] === 0 && min !== 0 ? max : 0;
+  let next = val;
+	let i = values.indexOf(val);
+	const start = next;
 
   while(next === (values[i] || zeroVal)) {
 

@@ -74,10 +74,10 @@ later.minute = later.m = {
   * @param {int} val: The desired value, must be within extent
   */
   next: function(d, val) {
-    var m = later.m.val(d),
-        s = later.s.val(d),
-        inc = val > 59 ? 60-m : (val <= m ? (60-m) + val : val-m),
-        next = new Date(d.getTime() + (inc * later.MIN) - (s * later.SEC));
+    const m = later.m.val(d),
+      s = later.s.val(d),
+      inc = val > 59 ? 60 - m : (val <= m ? (60 - m) + val : val - m);
+    let next = new Date(d.getTime() + (inc * later.MIN) - (s * later.SEC));
 
     // correct for passing over a daylight savings boundry
     if(!later.date.isUTC && next.getTime() <= d.getTime()) {

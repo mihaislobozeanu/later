@@ -12,7 +12,7 @@
 */
 
 later.date.prevRollover = function(d, val, constraint, period) {
-  var cur = constraint.val(d);
+  const cur = constraint.val(d);
 
   return (val >= cur || !val) ?
             period.start(period.prev(d, period.val(d)-1)) :

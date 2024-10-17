@@ -10,7 +10,7 @@
 *     http://github.com/bunkat/later
 */
 
-var later = require('../index');
+const later = require('../index');
 
 // PartOfDay time period
 // 0 = before noon (morning)
@@ -44,7 +44,7 @@ later.partOfDay = later.pd = {
   // this is either hour 0, 12, or 18 depending on what part of the day we
   // are in
   start: function(d) {
-    var hour = later.pd.val(d) === 0 ? 0 :
+    const hour = later.pd.val(d) === 0 ? 0 :
                   later.pd.val(d) === 1 ? 12 :
                   18;
 
@@ -60,7 +60,7 @@ later.partOfDay = later.pd = {
   // end is the last date that has the same val(d) as the d. in our case this
   // is the last second of the part of the day we are in
   end: function(d) {
-    var hour = later.pd.val(d) === 0 ? 11 :
+    const hour = later.pd.val(d) === 0 ? 11 :
                   later.pd.val(d) === 1 ? 5 :
                   23;
 
@@ -78,7 +78,7 @@ later.partOfDay = later.pd = {
   // move to the next instance of the specified time of day, noting that it
   // may occur on the following day
   next: function(d, val) {
-    var hour = val === 0 ? 0 : val === 1 ? 12 : 18;
+    const hour = val === 0 ? 0 : val === 1 ? 12 : 18;
 
     return later.date.next(
       later.Y.val(d),
@@ -92,7 +92,7 @@ later.partOfDay = later.pd = {
   // move to the prev instance of the specified time of day, noting that it
   // may occur on the previous day
   prev: function(d, val) {
-    var hour = val === 0 ? 11 : val === 1 ? 5 : 23;
+    const hour = val === 0 ? 11 : val === 1 ? 5 : 23;
 
     return later.date.prev(
       later.Y.val(d),
@@ -106,7 +106,7 @@ later.partOfDay = later.pd = {
 
 // use our new time period in a schedule
 later.date.localTime();
-var sched = later.parse.recur().every(15).minute().on(2).customPeriod('pd'),
+const sched = later.parse.recur().every(15).minute().on(2).customPeriod('pd'),
     next = later.schedule(sched).next(5, new Date(2013, 3, 21));
 
 console.log(next);

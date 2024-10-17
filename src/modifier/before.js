@@ -18,7 +18,7 @@
 */
 later.modifier.before = later.modifier.b = function(constraint, values) {
 
-  var value = values[values.length-1];
+  const value = values[values.length-1];
 
   return {
 

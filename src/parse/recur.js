@@ -12,12 +12,12 @@
 */
 later.parse.recur = function () {
 
-  var schedules = [],
-    exceptions = [],
-    cur,
-    curArr = schedules,
+  const schedules = [],
+    exceptions = [];
+  let cur,
     curName,
-    values, every, modifier, applyMin, applyMax, i, last;
+    values, every, modifier, applyMin, applyMax, i, last,
+    curArr = schedules;
 
   /**
   * Adds values to the specified constraint in the current schedule.
@@ -51,9 +51,9 @@ later.parse.recur = function () {
     }
 
     values = applyMin ? [min] : applyMax ? [max] : values;
-    var length = values.length;
+    const length = values.length;
     for (i = 0; i < length; i += 1) {
-      var val = values[i];
+      const val = values[i];
       if (curName.indexOf(val) < 0) {
         curName.push(val);
       }
@@ -183,8 +183,8 @@ later.parse.recur = function () {
     */
     time: function () {
       //values = arguments;
-      for (var i = 0, len = values.length; i < len; i++) {
-        var split = values[i].split(':');
+      for (let i = 0, len = values.length; i < len; i++) {
+        const split = values[i].split(':');
         if (split.length < 3) split.push(0);
         values[i] = (+split[0]) * 3600 + (+split[1]) * 60 + (+split[2]);
       }
@@ -338,7 +338,7 @@ later.parse.recur = function () {
     * @api public
     */
     dayEx: function () {
-      var extent = later.DX.extent(new Date());
+      const extent = later.DX.extent(new Date());
       add('DX', extent[0], extent[1]);
       return this;
     },
@@ -385,7 +385,7 @@ later.parse.recur = function () {
     * @api public
     */
     weekEx: function () {
-      var extent = later.WX.extent(new Date());
+      const extent = later.WX.extent(new Date());
       add('WX', extent[0], extent[1]);
       return this;
     },
@@ -423,7 +423,7 @@ later.parse.recur = function () {
     * @api public
     */
     monthEx: function () {
-      var extent = later.MX.extent(new Date());
+      const extent = later.MX.extent(new Date());
       add('MX', extent[0], extent[1]);
       return this;
     },
@@ -450,7 +450,7 @@ later.parse.recur = function () {
     * @api public
     */
     fullDate: function () {
-      for (var i = 0, len = values.length; i < len; i++) {
+      for (let i = 0, len = values.length; i < len; i++) {
         values[i] = values[i].getTime();
       }
 
@@ -466,7 +466,7 @@ later.parse.recur = function () {
     * @api public
     */
     customModifier: function (id, vals) {
-      var custom = later.modifier[id];
+      const custom = later.modifier[id];
       if (!custom) throw new Error('Custom modifier ' + id + ' not recognized!');
 
       modifier = id;
@@ -482,7 +482,7 @@ later.parse.recur = function () {
     * @api public
     */
     customPeriod: function (id) {
-      var custom = later[id];
+      const custom = later[id];
       if (!custom) throw new Error('Custom time period ' + id + ' not recognized!');
 
       add(id, custom.extent(new Date())[0], custom.extent(new Date())[1]);
@@ -500,7 +500,7 @@ later.parse.recur = function () {
     */
     reference: function (referenceDate) {
       referenceDate = new Date(referenceDate);
-      var start = later[last.n].val(referenceDate) % last.x;
+      const start = later[last.n].val(referenceDate) % last.x;
       return this.between(start, last.m);
     },
 

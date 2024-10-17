@@ -91,7 +91,7 @@ later.weekOfMonth = later.wm = {
   next: function(d, val) {
     val = val > later.wm.extent(d)[1] ? 1 : val;
 
-    var month = later.date.nextRollover(d, val, later.wm, later.M),
+    const month = later.date.nextRollover(d, val, later.wm, later.M),
         wmMax = later.wm.extent(month)[1];
 
     val = val > wmMax ? 1 : val || wmMax;
@@ -112,7 +112,7 @@ later.weekOfMonth = later.wm = {
   * @param {int} val: The desired value, must be within extent
   */
   prev: function(d, val) {
-    var month = later.date.prevRollover(d, val, later.wm, later.M),
+    const month = later.date.prevRollover(d, val, later.wm, later.M),
         wmMax = later.wm.extent(month)[1];
 
     val = val > wmMax ? wmMax : val || wmMax;

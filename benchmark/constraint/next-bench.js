@@ -1,4 +1,4 @@
-var Benchmark = require('benchmark'),
+const Benchmark = require('benchmark'),
     later = require('../../index'),
     suite = new Benchmark.Suite('next');
 

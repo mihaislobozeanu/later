@@ -1,11 +1,11 @@
-var Benchmark = require('benchmark'),
+const Benchmark = require('benchmark'),
     later = require('../../index'),
     suite = new Benchmark.Suite('next');
 
-var schedSimple = later.parse.cron('* */5 * * * *'),
+const schedSimple = later.parse.cron('* */5 * * * *'),
     compiledSimple = later.schedule(schedSimple);
 
-var schedComplex = later.parse.cron('0 5 15W * ?'),
+const schedComplex = later.parse.cron('0 5 15W * ?'),
     compiledComplex = later.schedule(schedComplex);
 
 suite

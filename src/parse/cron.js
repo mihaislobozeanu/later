@@ -22,14 +22,14 @@
 later.parse.cron = function (expr, hasSeconds) {
 
   // Constant array to convert valid names to values
-  var NAMES = {
+  const NAMES = {
     JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6, JUL: 7, AUG: 8,
     SEP: 9, OCT: 10, NOV: 11, DEC: 12,
     SUN: 1, MON: 2, TUE: 3, WED: 4, THU: 5, FRI: 6, SAT: 7
   };
 
   // Parsable replacements for common expressions
-  var REPLACEMENTS = {
+  const REPLACEMENTS = {
     '* * * * * *': '0/1 * * * * *',
     '@YEARLY': '0 0 1 1 *',
     '@ANNUALLY': '0 0 1 1 *',
@@ -40,7 +40,7 @@ later.parse.cron = function (expr, hasSeconds) {
   };
 
   // Contains the index, min, and max for each of the constraints
-  var FIELDS = {
+  const FIELDS = {
     s: [0, 0, 59],      // seconds
     m: [1, 0, 59],      // minutes
     h: [2, 0, 23],      // hours
@@ -69,9 +69,9 @@ later.parse.cron = function (expr, hasSeconds) {
   * @param {Sched} sched: The schedule that will be cloned
   */
   function cloneSchedule(sched) {
-    var clone = {}, field;
+    const clone = {};
 
-    for(field in sched) {
+    for(const field in sched) {
       if (field !== 'dc' && field !== 'd') {
         clone[field] = sched[field].slice(0);
       }
@@ -90,7 +90,7 @@ later.parse.cron = function (expr, hasSeconds) {
   * @param {Int} inc: The increment to use between min and max
   */
   function add(sched, name, min, max, inc) {
-    var i = min;
+    let i = min;
 
     if (!sched[name]) {
       sched[name] = [];
@@ -129,7 +129,7 @@ later.parse.cron = function (expr, hasSeconds) {
   }
 
   function addWeekday(s, curSched, value) {
-     var except1 = {}, except2 = {};
+     const except1 = {}, except2 = {};
      if (value=== 1) {
       // cron doesn't pass month boundaries, so if 1st is a
       // weekend then we need to use 2nd or 3rd instead
@@ -166,13 +166,13 @@ later.parse.cron = function (expr, hasSeconds) {
   */
   function addRange(item, curSched, name, min, max, offset) {
     // parse range/x
-    var incSplit = item.split('/'),
+    const incSplit = item.split('/'),
         inc = +incSplit[1],
         range = incSplit[0];
 
     // parse x-y or * or 0
     if (range !== '*' && range !== '0') {
-      var rangeSplit = range.split('-');
+      const rangeSplit = range.split('-');
       min = getValue(rangeSplit[0], offset, max);
 
       // fix for issue #13, range may be single digit
@@ -193,10 +193,10 @@ later.parse.cron = function (expr, hasSeconds) {
   * @param {Int} offset: The offset to apply to the cron value
   */
   function parse(item, s, name, min, max, offset) {
-    var value,
-        split,
-        schedules = s.schedules,
-        curSched = schedules[schedules.length-1];
+    let value,
+      split;
+    const schedules = s.schedules,
+      curSched = schedules[schedules.length - 1];
 
     // L just means min - 1 (this also makes it work for any field)
     if (item === 'L') {
@@ -247,9 +247,9 @@ later.parse.cron = function (expr, hasSeconds) {
   * @param {String} expr: The cron expression to parse
   */
   function parseExpr(expr) {
-    var schedule = {schedules: [{}], exceptions: []},
-        components = expr.replace(/(\s)+/g, ' ').split(' '),
-        field, f, component, items;
+    const schedule = { schedules: [{}], exceptions: [] },
+      components = expr.replace(/(\s)+/g, ' ').split(' ');
+    let field, f, component, items;
 
     for(field in FIELDS) {
       f = FIELDS[field];
@@ -259,8 +259,8 @@ later.parse.cron = function (expr, hasSeconds) {
         // schedule clones to handle # won't contain all of the
         // other constraints
         items = component.split(',').sort(itemSorter);
-        var i, length = items.length;
-        for (i = 0; i < length; i++) {
+        const length = items.length;
+        for (let i = 0; i < length; i++) {
           parse(items[i], schedule, field, f[1], f[2], f[3]);
         }
       }
@@ -275,10 +275,10 @@ later.parse.cron = function (expr, hasSeconds) {
   * @param {String} expr: The cron expression to prepare
   */
   function prepareExpr(expr) {
-    var prepared = expr.toUpperCase();
+    const prepared = expr.toUpperCase();
     return REPLACEMENTS[prepared] || prepared;
   }
 
-  var e = prepareExpr(expr);
+  const e = prepareExpr(expr);
   return parseExpr(hasSeconds ? e : '0 ' + e);
 };

@@ -1,7 +1,7 @@
-var later = require("../index");
+const later = require("../index");
 
 console.log(JSON.stringify({
-  "name": "later",
+  "name": "@eligo-public/later",
   "version": later.version,
   "description": "Determine later (or previous) occurrences of recurring schedules",
   "keywords": ["schedule", "occurrences", "recur", "cron"],
@@ -31,6 +31,6 @@ console.log(JSON.stringify({
     "test": "./node_modules/.bin/mocha test/**/*-test.js --reporter dot"
   },
   "publishConfig": {
-    "registry": "https://nexus.dudes.local/repository/npm-forks/"
+    "registry": "https://registry.npmjs.org/"
   }
 }, null, 2));

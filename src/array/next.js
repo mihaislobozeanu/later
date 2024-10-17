@@ -12,11 +12,10 @@
 
 later.array.next = function (val, values, extent) {
 
-  var cur,
-      zeroIsLargest = extent[0] !== 0,
-      nextIdx = 0;
+  let cur, nextIdx = 0;
+  const zeroIsLargest = extent[0] !== 0;
 
-  for(var i = values.length-1; i > -1; --i) {
+  for(let i = values.length-1; i > -1; --i) {
     cur = values[i];
 
     if(cur === val) {

@@ -48,7 +48,7 @@ later.dayOfYear = later.dy = {
   * @param {Date} d: The date indicating the month to find the extent of
   */
   extent: function(d) {
-    var year = later.Y.val(d);
+    const year = later.Y.val(d);
 
     // shortcut on finding leap years since this function gets called a lot
     // works between 1901 and 2099
@@ -81,7 +81,7 @@ later.dayOfYear = later.dy = {
   */
   next: function(d, val) {
     val = val > later.dy.extent(d)[1] ? 1 : val;
-    var year = later.date.nextRollover(d, val, later.dy, later.Y),
+    const year = later.date.nextRollover(d, val, later.dy, later.Y),
         dyMax = later.dy.extent(year)[1];
 
     val = val > dyMax ? 1 : val || dyMax;
@@ -101,7 +101,7 @@ later.dayOfYear = later.dy = {
   * @param {int} val: The desired value, must be within extent
   */
   prev: function(d, val) {
-    var year = later.date.prevRollover(d, val, later.dy, later.Y),
+    const year = later.date.prevRollover(d, val, later.dy, later.Y),
         dyMax = later.dy.extent(year)[1];
 
     val = val > dyMax ? dyMax : val || dyMax;

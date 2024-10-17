@@ -76,7 +76,7 @@ later.time = later.t = {
   next: function(d, val) {
     val = val > 86399 ? 0 : val;
 
-    var next = later.date.next(
+    let next = later.date.next(
       later.Y.val(d),
       later.M.val(d),
       later.D.val(d) + (val <= later.t.val(d) ? 1 : 0),

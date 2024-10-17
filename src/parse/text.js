@@ -11,13 +11,13 @@
 */
 later.parse.text = function(str) {
 
-  var recur = later.parse.recur,
-      pos = 0,
-      input = '',
-      error;
+  const recur = later.parse.recur;
+  let error,
+    pos = 0,
+    input = '';
 
   // Regex expressions for all of the valid tokens
-  var TOKENTYPES = {
+  const TOKENTYPES = {
         eof: /^$/,
 		rank: /^((\d+)(st|nd|rd|th)?)\b/,
         time: /^((([0]?[1-9]|1[0-2]):[0-5]\d(\s)?(am|pm))|(([0]?\d|1\d|2[0-3]):[0-5]\d))\b/,
@@ -56,7 +56,7 @@ later.parse.text = function(str) {
       };
 
   // Array to convert string names to valid numerical values
-  var NAMES = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7,
+  const NAMES = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7,
         aug: 8, sep: 9, oct: 10, nov: 11, dec: 12, sun: 1, mon: 2, tue: 3,
         wed: 4, thu: 5, fri: 6, sat: 7, '1st': 1, fir: 1, '2nd': 2, sec: 2,
         '3rd': 3, thi: 3, '4th': 4, 'for': 4
@@ -81,9 +81,9 @@ later.parse.text = function(str) {
   * @param {TokenType} exepected: The types of token to scan for
   */
   function peek(expected) {
-    var scanTokens = expected instanceof Array ? expected : [expected],
-        whiteSpace = /\s+/,
-        token, curInput, m, scanToken, start, len;
+    const scanTokens = expected instanceof Array ? expected : [expected],
+      whiteSpace = /\s+/;
+    let token, curInput, m, scanToken, start, len;
 
     scanTokens.push(whiteSpace);
 
@@ -94,8 +94,8 @@ later.parse.text = function(str) {
       curInput = input.substring(start);
       token = t(start, start, input.split(whiteSpace)[0]);
 
-      var i, length = scanTokens.length;
-      for(i = 0; i < length; i++) {
+      const length = scanTokens.length;
+      for(let i = 0; i < length; i++) {
         scanToken = scanTokens[i];
         m = scanToken.exec(curInput);
         if (m && m.index === 0 && m[0].length > len) {
@@ -119,7 +119,7 @@ later.parse.text = function(str) {
   * @param {TokenType} exepectedToken: The types of token to scan for
   */
   function scan(expectedToken) {
-    var token = peek(expectedToken);
+    const token = peek(expectedToken);
     pos = token.endPos;
     return token;
   }
@@ -131,11 +131,11 @@ later.parse.text = function(str) {
   * @param {TokenType} tokenType: The type of range values allowed
   */
   function parseThroughExpr(tokenType) {
-    var start = +parseTokenValue(tokenType),
+    const start = +parseTokenValue(tokenType),
         end = checkAndParse(TOKENTYPES.through) ? +parseTokenValue(tokenType) : start,
         nums = [];
 
-    for (var i = start; i <= end; i++) {
+    for (let i = start; i <= end; i++) {
       nums.push(i);
     }
 
@@ -149,7 +149,7 @@ later.parse.text = function(str) {
   * @param {TokenType} tokenType: The type of range values allowed
   */
   function parseRanges(tokenType) {
-    var nums = parseThroughExpr(tokenType);
+    let nums = parseThroughExpr(tokenType);
     while (checkAndParse(TOKENTYPES.and)) {
       nums = nums.concat(parseThroughExpr(tokenType));
     }
@@ -162,7 +162,7 @@ later.parse.text = function(str) {
   * @param {Recur} r: The recurrence to add the expression to
   */
   function parseEvery(r) {
-    var num, period, start, end;
+    let num, period, start, end;
 
     if (checkAndParse(TOKENTYPES.weekend)) {
       r.on(NAMES.sun,NAMES.sat).dayOfWeek();
@@ -222,10 +222,10 @@ later.parse.text = function(str) {
     input = str;
     error = -1;
 
-    var r = recur();
+    const r = recur();
     while (pos < input.length && error < 0) {
 
-      var token = parseToken([TOKENTYPES.every, TOKENTYPES.after, TOKENTYPES.before,
+      const token = parseToken([TOKENTYPES.every, TOKENTYPES.after, TOKENTYPES.before,
             TOKENTYPES.onthe, TOKENTYPES.on, TOKENTYPES.of, TOKENTYPES["in"],
             TOKENTYPES.at, TOKENTYPES.and, TOKENTYPES.except,
             TOKENTYPES.also]);
@@ -295,7 +295,7 @@ later.parse.text = function(str) {
   * @param {Recur} r: The recurrence to add the time period to
   */
   function parseTimePeriod(r) {
-    var timePeriod = parseToken([TOKENTYPES.second, TOKENTYPES.minute,
+    const timePeriod = parseToken([TOKENTYPES.second, TOKENTYPES.minute,
           TOKENTYPES.hour, TOKENTYPES.dayOfYear, TOKENTYPES.dayOfWeek,
           TOKENTYPES.dayInstance, TOKENTYPES.day, TOKENTYPES.month,
           TOKENTYPES.year, TOKENTYPES.weekOfMonth, TOKENTYPES.weekOfYear]);
@@ -348,7 +348,7 @@ later.parse.text = function(str) {
   * @param {TokenType} tokenType: The type or types of token to parse
   */
   function checkAndParse(tokenType) {
-    var found = (peek(tokenType)).type === tokenType;
+    const found = (peek(tokenType)).type === tokenType;
     if (found) {
       scan(tokenType);
     }
@@ -361,7 +361,7 @@ later.parse.text = function(str) {
   * @param {TokenType} tokenType: The type or types of token to parse
   */
   function parseToken(tokenType) {
-    var t = scan(tokenType);
+    const t = scan(tokenType);
     if (t.type) {
       t.text = convertString(t.text, tokenType);
     }
@@ -388,11 +388,11 @@ later.parse.text = function(str) {
   * @param {TokenType} tokenType: The type of token to convert
   */
   function convertString(str, tokenType) {
-    var output = str;
+    let output = str;
 
     switch (tokenType) {
       case TOKENTYPES.time:
-        var parts = str.split(/(:|am|pm)/),
+        const parts = str.split(/(:|am|pm)/),
             hour = parts[3] === 'pm' && parts[0] < 12 ? parseInt(parts[0],10) + 12 : parts[0],
             min = parts[2].trim();
 

@@ -1,6 +1,6 @@
 {
-  "name": "later",
-  "version": "2.0.1",
+  "name": "@eligo-public/later",
+  "version": "1.0.0",
   "description": "Determine later (or previous) occurrences of recurring schedules",
   "keywords": [
     "schedule",
@@ -34,6 +34,6 @@
     "test": "./node_modules/.bin/mocha test/**/*-test.js --reporter dot"
   },
   "publishConfig": {
-    "registry": "https://nexus.dudes.local/repository/npm-forks/"
+    "registry": "https://registry.npmjs.org/"
   }
 }

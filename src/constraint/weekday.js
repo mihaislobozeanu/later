@@ -30,7 +30,7 @@ later.weekday = later.WD = {
     if (d.WD)
       return d.WD;
 
-    var weekdaysInMonth = later.WD.weekdaysInMonth(d),
+    const weekdaysInMonth = later.WD.weekdaysInMonth(d),
       day = later.date.getDate.call(d);
     return (d.WD = weekdaysInMonth.map[day].value + 1);
   },
@@ -47,7 +47,7 @@ later.weekday = later.WD = {
   */
   isValid: function (d, val) {
     if (later.WD.val(d) === (val || later.WD.extent(d)[1])) {
-      var weekdaysInMonth = later.WD.weekdaysInMonth(d),
+      const weekdaysInMonth = later.WD.weekdaysInMonth(d),
         day = later.date.getDate.call(d);
       return weekdaysInMonth.map[day].valid;
     }
@@ -64,7 +64,7 @@ later.weekday = later.WD = {
     if (d.WDExtent)
       return d.WDExtent;
 
-    var weekdaysInMonth = later.WD.weekdaysInMonth(d);
+    const weekdaysInMonth = later.WD.weekdaysInMonth(d);
     return (d.WDExtent = [1, weekdaysInMonth.values.length]);
   },
 
@@ -95,12 +95,12 @@ later.weekday = later.WD = {
   * @param {int} val: The desired value, must be within extent
   */
   next: function (d, val) {
-    var DMax = later.WD.extent(d)[1];
+    let DMax = later.WD.extent(d)[1];
     val = val > DMax ? 1 : val;
 
-    var weekdaysInMonth = later.WD.weekdaysInMonth(d),
-      day = weekdaysInMonth.values[(val || DMax) - 1],
-      month = later.date.nextRollover(d, day, later.D, later.M);
+    let weekdaysInMonth = later.WD.weekdaysInMonth(d);
+    let day = weekdaysInMonth.values[(val || DMax) - 1];
+    const month = later.date.nextRollover(d, day, later.D, later.M);
     DMax = later.WD.extent(month)[1];
 
     val = val > DMax ? 1 : val || DMax;
@@ -123,10 +123,10 @@ later.weekday = later.WD = {
   * @param {int} val: The desired value, must be within extent
   */
   prev: function (d, val) {
-    var weekdaysInMonth = later.WD.weekdaysInMonth(d),
-      day = weekdaysInMonth.values[(val || DMax) - 1],
-      month = later.date.prevRollover(d, day, later.D, later.M),
-      DMax = later.WD.extent(month)[1];
+    let weekdaysInMonth = later.WD.weekdaysInMonth(d),
+      day = weekdaysInMonth.values[(val || DMax) - 1];
+    const month = later.date.prevRollover(d, day, later.D, later.M);
+    var DMax = later.WD.extent(month)[1];
 
     val = val > DMax ? DMax : val || DMax;
     weekdaysInMonth = later.WD.weekdaysInMonth(month);

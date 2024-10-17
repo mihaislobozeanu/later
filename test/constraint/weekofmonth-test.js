@@ -1,10 +1,10 @@
-var later = require('../../index'),
+const later = require('../../index'),
     runner = require('./runner')(later, later.weekOfMonth),
     should = require('should');
 
 describe('Later.weekOfMonth', function() {
 
-  var tests = [
+  const tests = [
     {
       // first second of year
       date: new Date(2008, 0, 1),

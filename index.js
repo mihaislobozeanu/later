@@ -1,4 +1,4 @@
-var globals = ["document", "window", "later"],
+const globals = ["document", "window", "later"],
     globalValues = {};
 
 globals.forEach(function(g) {

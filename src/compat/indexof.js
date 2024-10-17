@@ -9,12 +9,12 @@ if (!Array.prototype.indexOf) {
         if (this == null) {
             throw new TypeError();
         }
-        var t = Object(this);
-        var len = t.length >>> 0;
+        const t = Object(this);
+        const len = t.length >>> 0;
         if (len === 0) {
             return -1;
         }
-        var n = 0;
+        let n = 0;
         if (arguments.length > 1) {
             n = Number(arguments[1]);
             if (n != n) { // shortcut for verifying if it's NaN
@@ -26,7 +26,7 @@ if (!Array.prototype.indexOf) {
         if (n >= len) {
             return -1;
         }
-        var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+        let k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
         for (; k < len; k++) {
             if (k in t && t[k] === searchElement) {
                 return k;
