@@ -63,6 +63,49 @@ describe('Schedule', function() {
       should.equal(schedule(s).next(1, d, e), later.NEVER);
     });
 
+    it('should return next schedule if previous schedule has next date later.NEVER', function () {
+      const d = new Date('2013-03-21T00:00:05Z');
+      const s = { schedules: [{ Y: [2012] }, { Y: [2017] }] };
+      schedule(s).next(1, d).should.eql(new Date('2017-01-01T00:00:00Z'));
+    });
+
+    it('should return next three (3) valid dates from a composite schedule', function () {
+      const nextYear = (new Date()).getFullYear() + 1;
+      const expectingDates = [
+        new Date(`${nextYear}-02-01T18:30:00Z`),
+        new Date(`${nextYear}-02-02T17:30:00Z`),
+        new Date(`${nextYear + 1}-02-01T18:30:00Z`)
+      ];
+      const s = {
+        schedules: [
+          { s: [0], m: [30], h: [18], D: [1], M: [2] },
+          { s: [0], m: [30], h: [17], D: [2], M: [2], Y: [nextYear] }
+        ],
+        exceptions: []
+      };
+      schedule(s)
+        .next(3)
+        .should.eql(expectingDates);
+    });
+
+    it('should return next three (3) valid dates from a composite schedule', function () {
+      const nextYear = (new Date()).getFullYear() + 1;
+      const expectingDates = [
+        new Date(`${nextYear}-01-01T18:30:00Z`),
+        new Date(`${nextYear}-02-02T17:30:00Z`),
+        new Date(`${nextYear + 1}-01-01T18:30:00Z`)
+      ];
+      const s = {
+        schedules: [
+          { s: [0], m: [30], h: [17], D: [2], M: [2], Y: [nextYear] },
+          { s: [0], m: [30], h: [18], D: [1], M: [1] }
+        ],
+        exceptions: []
+      };
+      schedule(s)
+        .next(3)
+        .should.eql(expectingDates);
+    });
   });
 
   describe('prev', function() {

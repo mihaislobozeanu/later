@@ -8,6 +8,13 @@
 * Later is freely distributable under the MIT license.
 * For all details and documentation:
 *     http://github.com/bunkat/later
+*
+*
+* Changes:
+*   - by Vlad-Dima21: 
+*     - fixed compareFn when comparing with `later.NEVER`
+*     - case covered by test `should return next schedule if previous schedule has next date later.NEVER`
+*     - issue reported here: `https://github.com/breejs/later/issues/14`
 */
 later.schedule = function(sched) {
   if(!sched) throw new Error('Missing schedule definition.');
@@ -356,8 +363,8 @@ later.schedule = function(sched) {
   */
   function compareFn(dir) {
     return dir === 'next' ?
-      function(a,b) { return !b || (a.getTime() > b.getTime()); } :
-      function(a,b) { return !a || (b.getTime() > a.getTime()); };
+      function(a,b) { return (!a || !b) || (a.getTime() > b.getTime()); } :
+      function(a,b) { return (!a || !b) || (b.getTime() > a.getTime()); };
   }
 
   /**
