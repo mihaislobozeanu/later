@@ -8,10 +8,10 @@
     "recur",
     "cron"
   ],
-  "author": "BunKat <bill@levelstory.com>",
+  "author": "Mihai Slobozeanu <mihai@santinela.com>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/bunkat/later.git"
+    "url": "git://github.com/mihaislobozeanu/later.git"
   },
   "main": "index.js",
   "browserify": "index-browserify.js",
