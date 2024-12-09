@@ -5,7 +5,12 @@ console.log(JSON.stringify({
   "version": later.version,
   "description": "Determine later (or previous) occurrences of recurring schedules",
   "keywords": ["schedule", "occurrences", "recur", "cron"],
-  "author": "Mihai Slobozeanu <mihai@santinela.com>",
+  "author": "BunKat <bill@levelstory.com>",
+  "author": "BunKat <bill@levelstory.com>",
+  "contributors": [
+    "mihaislobozeanu <mihaislobozeanu@gmail.com>",
+    "Vlad-Dima21 <vladima2001@gmail.com"
+  ],
   "repository" : {
     "type" : "git",
     "url" : "git://github.com/mihaislobozeanu/later.git"
