@@ -38,6 +38,7 @@
     "test": "./node_modules/.bin/mocha test/**/*-test.js --reporter dot"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }
